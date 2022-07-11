@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import clothes from './../../../data/clothes.json';
+import { connect } from 'react-redux';
 
-export default class Tabs extends Component {
+class Tabs extends Component {
     renderTabs = () => {
         return clothes.navPills.map(ele => {
             return (
-                <li className="nav-item" key={ele.tabName}>
+                <li onClick={() => { this.props.setSelectedType(ele.type) }} className="nav-item" key={ele.tabName}>
                     <a
                         className={`nav-link ${ele.active && "active"}`}
                         data-toggle="pill"
@@ -25,3 +26,16 @@ export default class Tabs extends Component {
         )
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSelectedType: (type) => {
+            dispatch({
+                type: "SET_SELECTED_TYPE",
+                payload: type
+            })
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Tabs)

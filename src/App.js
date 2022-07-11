@@ -15,6 +15,8 @@ import BaiTapProps from './Components/BaiTapProps/BaiTapProps';
 import DemoRedux from './Components/Redux/DemoRedux/Parent';
 import BaiTapDienThoaiRedux from './Components/Redux/BaiTapDienThoai/BaiTapDienThoai';
 import BaiTapThuDo from './Components/Redux/BaiTapThuDo/BaiTapThuDo';
+import LifeCycle from './Components/LifeCycle/LifeCycle';
+import BaiTapQuanLyNguoidung from './Components/BaiTapQuanLyNguoiDung/BaiTapQuanLyNguoiDung';
 
 
 
@@ -33,7 +35,9 @@ function App() {
       {/* <BaiTapProps></BaiTapProps> */}
       {/* <DemoRedux></DemoRedux>
       <BaiTapDienThoaiRedux></BaiTapDienThoaiRedux> */}
-      <BaiTapThuDo />
+      {/* <BaiTapThuDo /> */}
+      {/* <LifeCycle /> */}
+      <BaiTapQuanLyNguoidung />
     </div>
   );
 }

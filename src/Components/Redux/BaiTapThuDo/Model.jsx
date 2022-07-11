@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 class Model extends Component {
     render() {
-        // console.log(this.props.model);
+        console.log(this.props.model);
         const { topclothes, botclothes, shoes, handbags, necklaces, hairstyle, background } = this.props.model;
         return (
             <div className="contain">
