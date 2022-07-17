@@ -3,8 +3,21 @@ import { connect } from 'react-redux';
 
 
 class UserManagement extends Component {
+    state = {
+        keyword: "",
+        selectedType: "All",
+    }
     renderUserList = () => {
-        return this.props.userList.map((ele, idx) => {
+        // const { userName, fullName, email, password, phone, type } = this.props.selectedUSer || {};
+        let data = this.props.userList.filter(ele => {
+            return ele.fullName.toLowerCase().trim().indexOf(this.state.keyword.toLowerCase().trim()) !== - 1
+        })
+
+        if (this.state.selectedType !== "All") {
+            data = data.filter(ele => ele.type === this.state.selectedType)
+        }
+
+        return data.map((ele, idx) => {
             const { id, userName, fullName, email, phone, type } = ele;
             return (
                 <tr key={id} className={`${idx % 2 === 0 && 'bg-light'}`}>
@@ -20,12 +33,23 @@ class UserManagement extends Component {
                             payload: ele
                         })}
                             className="btn btn-info mr-2">EDIT</button>
-                        <button className="btn btn-danger">DELETE</button>
+                        <button onClick={() => this.props.dispatch({
+                            type: "DELETE_USER",
+                            payload: ele.id
+                        })} className="btn btn-danger">DELETE</button>
                     </td>
                 </tr>
             )
         })
     }
+
+    handleChange = (e) => {
+        const { name, value } = e.target;
+        this.setState({
+            [name]: value
+        })
+    }
+
     render() {
         return (
             <div className="card p-0 mt-3">
@@ -37,12 +61,17 @@ class UserManagement extends Component {
                                 type="text"
                                 placeholder="Search by full name..."
                                 className="form-control"
+                                onChange={this.handleChange}
+                                name="keyword"
                             />
                         </div>
                     </div>
                     <div className="col-3 ml-auto">
                         <div className="form-group mb-0">
-                            <select className="form-control">
+                            <select className="form-control"
+                                onChange={this.handleChange}
+                                name="selectedType"
+                            >
                                 <option>All</option>
                                 <option>Client</option>
                                 <option>Admin</option>
@@ -64,7 +93,7 @@ class UserManagement extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.renderUserList()};
+                            {this.renderUserList()}
                         </tbody>
                     </table>
                 </div>

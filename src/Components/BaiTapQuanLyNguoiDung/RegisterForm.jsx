@@ -1,17 +1,21 @@
 import React, { Component } from 'react'
+import { createRef } from 'react';
 import { connect } from 'react-redux/es/exports';
+import { addUserAction, updateUserAction } from '../../Store/Actions/user';
+
+const DEFAULT_VALUES = {
+    id: "",
+    userName: "",
+    fullName: "",
+    email: "",
+    password: "",
+    phone: "",
+    type: "Client",
+}
 
 class RegisterForm extends Component {
     state = {
-        values: {
-            id: "",
-            userName: "",
-            fullName: "",
-            email: "",
-            password: "",
-            phone: "",
-            type: "Client",
-        },
+        values: DEFAULT_VALUES,
         error: {
             id: "",
             userName: "",
@@ -22,10 +26,25 @@ class RegisterForm extends Component {
             type: "",
         },
     };
+
+    formRef = createRef();
+
+    static getDerivedStateFromProps(nextProps, currentState) {
+        // console.log({
+        //     nextProps,
+        //     currentState
+        // });
+
+        if (nextProps.selectedUSer && currentState.values.id !== nextProps.selectedUSer.id) {
+            currentState.values = nextProps.selectedUSer;
+        }
+        return currentState
+    }
+
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({
-            value: {
+            values: {
                 ...this.state.values,
                 [name]: value,
             }
@@ -35,20 +54,51 @@ class RegisterForm extends Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-
-        for (const key in this.state.error) {
-            const message = this.state.error[key];
-            if (message) {
-                return;
-            }
+        // console.log(e.target.checkValidity());
+        // for (const key in this.state.error) {
+        //     const message = this.state.error[key];
+        //     if (message) {
+        //         return;
+        //     }
+        // }
+        if (!e.target.checkValidity()) {
+            return;
         }
 
-        this.props.dispatch({
-            type: "ADD_USER",
-            payload: this.state.values,
-        })
+        // if (this.props.selectedUSer) {
+        //     this.props.dispatch({
+        //         type: 'UPDATE_USER',
+        //         payload: this.state.values
+        //     })
+        // } else {
+        //     this.props.dispatch({
+        //         type: "ADD_USER",
+        //         payload: this.state.values,
+        //     })
+        // }
+
+        // this.props.dispatch({
+        //     type: this.props.selectedUSer ? 'UPDATE_USER' : 'ADD_USER',
+        //     payload: this.state.values
+        // })
+
+        // if (this.props.selectedUSer) {
+        //     this.props.dispatch(updateUserAction(this.state.values))
+        // } else {
+        //     this.props.dispatch(addUserAction(this.state.values))
+        // }
+
+        this.props.selectedUSer ? this.props.dispatch(updateUserAction(this.state.values)) : this.props.dispatch(addUserAction(this.state.values))
+
+        this.setState({
+            values: DEFAULT_VALUES,
+        }, () => {
+            // force render component render lai 1 lan nua
+            this.forceUpdate()
+        });
     }
-    handerBlur = (e) => {
+
+    handlerBlur = (e) => {
         const { name,
             title,
             minLength,
@@ -76,13 +126,14 @@ class RegisterForm extends Component {
         })
     }
     render() {
+        const { userName, fullName, email, password, phone, type } = this.state.values || {};
         return (
             <div className="card p-0">
                 <div className="card-header bg-warning text-white font-weight-bold">
                     REGISTER FORM
                 </div>
                 <div className="card-body">
-                    <form noValidate onSubmit={this.handleSubmit}>
+                    <form ref={this.formRef} noValidate onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="col-6">
                                 <div className="form-group">
@@ -93,9 +144,10 @@ class RegisterForm extends Component {
                                         // onChange={(event) => {this.handleChange(event)}}
                                         // khi 2 tham số nhận vào giống nhau thì dùng rút gọn
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handlerBlur}
                                         required
                                         title="User name"
+                                        value={userName}
                                     />
                                     {this.state.error.userName && <span className='text-danger'>{this.state.error.userName}</span>}
                                 </div>
@@ -108,9 +160,10 @@ class RegisterForm extends Component {
                                         minLength={4}
                                         maxLength={12}
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handlerBlur}
                                         required
                                         title="Full name"
+                                        value={fullName}
                                     />
                                     {this.state.error.fullName && <span className='text-danger'>{this.state.error.fullName}</span>}
                                 </div>
@@ -121,9 +174,10 @@ class RegisterForm extends Component {
                                     <input type="text" className="form-control"
                                         name="password"
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handlerBlur}
                                         required
                                         title="Password"
+                                        value={password}
                                     />
                                     {this.state.error.password && <span className='text-danger'>{this.state.error.password}</span>}
                                 </div>
@@ -134,9 +188,10 @@ class RegisterForm extends Component {
                                     <input type="text" className="form-control"
                                         name="phone"
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handlerBlur}
                                         required
                                         title="Phone number"
+                                        value={phone}
                                     />
                                     {this.state.error.phone && <span className='text-danger'>{this.state.error.phone}</span>}
                                 </div>
@@ -148,9 +203,10 @@ class RegisterForm extends Component {
                                         name="email"
                                         pattern='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.]{1}[a-zA-Z]{2,}$'
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handlerBlur}
                                         required
                                         title="Email"
+                                        value={email}
                                     />
                                     {this.state.error.email && <span className='text-danger'>{this.state.error.email}</span>}
                                 </div>
@@ -161,8 +217,9 @@ class RegisterForm extends Component {
                                     <select className="form-control"
                                         name="type"
                                         onChange={this.handleChange}
-                                        onBlur={this.handerBlur}
+                                        onBlur={this.handleBlur}
                                         required
+                                        value={type}
                                     >
                                         <option>Client</option>
                                         <option>Admin</option>
@@ -170,16 +227,18 @@ class RegisterForm extends Component {
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" className="btn btn-warning mr-2">SAVE</button>
+                        <button disabled={!this.formRef.current?.checkValidity()} type="submit" className="btn btn-warning mr-2">SAVE</button>
                         <button type="reset" className="btn btn-outline-dark">RESET</button>
                     </form>
                 </div>
-                {/* <div className="card-footer text-muted">
-                    
-                </div> */}
             </div>
         )
     }
 }
+const mapStateToProps = state => {
+    return {
+        ...state.userReducer,
+    }
+};
 
-export default connect()(RegisterForm);
+export default connect(mapStateToProps)(RegisterForm);
