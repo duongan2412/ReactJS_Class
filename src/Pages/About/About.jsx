@@ -3,7 +3,7 @@ import { withRouter } from '../../HOC/withRouter'
 
 class About extends Component {
     render() {
-        console.log(this.props.searchParams);
+        // console.log(this.props.searchParams);
         return (
             <div>
                 <p>Keyword: {this.props.searchParams.get('keyword')} </p>
