@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
+import { withRouter } from '../../HOC/withRouter'
 
-export default class MovieDetail extends Component {
+class MovieDetail extends Component {
     render() {
         return (
-            <div>MovieDetail</div>
+            <div>
+                <p>Movie Id: {this.props.params.id}</p>
+            </div>
         )
     }
 }
+
+export default withRouter(MovieDetail)

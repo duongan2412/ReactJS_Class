@@ -1,6 +1,12 @@
-import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
-export default class HeaderRouter extends Component {
+import React, { Component } from 'react';
+import { createRef } from 'react';
+import { createSearchParams, NavLink } from 'react-router-dom';
+import { withRouter } from '../../HOC/withRouter';
+
+
+class HeaderRouter extends Component {
+    inputRef = createRef();
+
     render() {
         return (
             <nav className="navbar navbar-expand-sm navbar-light bg-light">
@@ -14,13 +20,19 @@ export default class HeaderRouter extends Component {
                             <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
                         </li> */}
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/">Home</NavLink>
+                            <NavLink className="nav-link" to="home">Home</NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/about">About</NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink className="nav-link" to="/movies-detail">Movies Detail</NavLink>
+                            <NavLink className="nav-link" to="/movies-detail/1314">Movies Detail</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/login">Login</NavLink>
+                        </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/hooks">Hooks</NavLink>
                         </li>
                         {/* <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="dropdownId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -34,8 +46,27 @@ export default class HeaderRouter extends Component {
                         <input className="form-control mr-sm-2" type="text" placeholder="Search" />
                         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </form> */}
+                    <div className='d-flex'>
+                        <div className="form-group mb-0">
+                            <input ref={this.inputRef} type="text" className='form-control' />
+                        </div>
+                        <button onClick={() => {
+                            const value = this.inputRef.current.value;
+                            this.props.navigate({
+                                pathname: '/about',
+                                search: `?${createSearchParams({
+                                    keyword: value,
+                                    userID: 1,
+                                    movieID: 2
+                                })}`
+                            })
+                        }}
+                            className="btn btn-warning">Search</button>
+                    </div>
                 </div>
-            </nav>
+            </nav >
         )
     }
 }
+
+export default withRouter(HeaderRouter)

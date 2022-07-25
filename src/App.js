@@ -24,6 +24,8 @@ import About from './Pages/About/About';
 import MovieDetail from './Pages/MovieDetail/MovieDetail';
 import HeaderRouter from './Components/HeaderRouter/HeaderRouter';
 import PagesNotFound from './Pages/PagesNotFound/PagesNotFound';
+import Router from './router';
+import { GlobalContext, GlobalProvider } from './Contexts/GlobalContext';
 
 function App() {
   return (
@@ -43,16 +45,19 @@ function App() {
       {/* <BaiTapThuDo /> */}
       {/* <LifeCycle /> */}
       {/* <BaiTapQuanLyNguoidung /> */}
-      <BrowserRouter>
-        <HeaderRouter />
-        <Routes>
+      <GlobalProvider>
+        <BrowserRouter>
+          {/* <HeaderRouter /> */}
+          {/* <Routes>
           <Route path='/' element={<Navigate to='/home' />} />
           <Route path='home' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/movies-detail' element={<MovieDetail />} />
           <Route path='*' element={<PagesNotFound />} />
-        </Routes>
-      </BrowserRouter>
+        </Routes> */}
+          <Router />
+        </BrowserRouter>
+      </GlobalProvider>
     </div>
   );
 }
